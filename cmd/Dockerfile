@@ -15,10 +15,11 @@ COPY ../.. .
 RUN go mod download
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o smq cmd/smq.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o smq cmd/smq/smq.go
 
 FROM scratch
 
 COPY --from=builder /app/smq .
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 ENTRYPOINT ["./smq"]
