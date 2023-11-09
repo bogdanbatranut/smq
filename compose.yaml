@@ -1,0 +1,9 @@
+services:
+  smq:
+    build:
+      dockerfile: ./cmd/smq/Dockerfile
+    ports:
+      - "3113:3113"
+    environment:
+      - APP_PORT=3333
+      - APP_HOST=dev.auto-mall.ro
