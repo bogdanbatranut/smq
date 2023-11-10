@@ -27,7 +27,7 @@ func main() {
 		panic(err)
 	}
 
-	log.Println("Listening on port 3333")
+	log.Println(fmt.Sprintf("Listening on port %s", port))
 }
 
 func addMessageHandler(mq *entity.MessageQueue) http.HandlerFunc {
