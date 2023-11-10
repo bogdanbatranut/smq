@@ -22,12 +22,13 @@ func main() {
 	r.HandleFunc("/peekall/{topic}", peekAllMessageHandler(messageQueue)).Methods("GET")
 	r.HandleFunc("/clear/{topic}", clear(messageQueue)).Methods("DELETE")
 
+	log.Println(fmt.Sprintf("Listening on port %s", port))
+
 	err := http.ListenAndServe(fmt.Sprintf(":%s", port), r)
 	if err != nil {
 		panic(err)
 	}
 
-	log.Println(fmt.Sprintf("Listening on port %s", port))
 }
 
 func addMessageHandler(mq *entity.MessageQueue) http.HandlerFunc {
