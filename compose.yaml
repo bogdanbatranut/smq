@@ -5,5 +5,5 @@ services:
     ports:
       - "3113:3113"
     environment:
-      - APP_PORT=3333
+      - APP_PORT=3113
       - APP_HOST=dev.auto-mall.ro
