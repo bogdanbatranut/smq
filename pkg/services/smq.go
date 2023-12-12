@@ -56,7 +56,7 @@ func (s SMQService) Start() {
 	r.HandleFunc("/pop/{topic}", s.popMessageHandler()).Methods("GET")
 	r.HandleFunc("/peek/{topic}", s.peekMessageHandler()).Methods("GET")
 	r.HandleFunc("/peekall/{topic}", s.peekAllMessageHandler()).Methods("GET")
-	r.HandleFunc("/topics", s.addMessageHandler()).Methods("GET")
+	r.HandleFunc("/topics", s.getTopics()).Methods("GET")
 	r.HandleFunc("/clear/{topic}", s.clear()).Methods("DELETE")
 
 	log.Println(fmt.Sprintf("listening on port %s", port))
