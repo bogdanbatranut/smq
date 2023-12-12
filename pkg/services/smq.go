@@ -70,13 +70,16 @@ func (s SMQService) Start() {
 func (s SMQService) getTopics() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		topics := s.messageQueue.GetTopics()
+		keys := s.messageQueue.GetTopics()
+
 		type topicsResults struct {
-			topics []string
+			Topics []string `json:"topics"`
 		}
-		var res topicsResults
-		res.topics = topics
-		bytes, err := json.Marshal(res)
+
+		res := topicsResults{
+			Topics: keys,
+		}
+		bytes, err := json.Marshal(&res)
 		if err != nil {
 			panic(err)
 		}

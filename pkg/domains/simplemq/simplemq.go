@@ -1,7 +1,6 @@
 package simplemq
 
 import (
-	"log"
 	"smq/pkg/entity"
 	"sync"
 )
@@ -86,6 +85,5 @@ func (mq *SimpleMessageQueueRepository) GetTopics() []string {
 	for key := range mq.data {
 		topics = append(topics, key)
 	}
-	log.Printf("%+v", mq.data)
 	return topics
 }
