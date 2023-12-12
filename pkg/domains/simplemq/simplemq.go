@@ -82,7 +82,7 @@ func (mq *SimpleMessageQueueRepository) Push(topic string, obj []byte) {
 
 func (mq *SimpleMessageQueueRepository) GetTopics() []string {
 	var topics []string
-	for key, _ := range mq.data {
+	for key := range mq.data {
 		topics = append(topics, key)
 	}
 	return topics
