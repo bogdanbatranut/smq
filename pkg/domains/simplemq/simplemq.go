@@ -26,6 +26,9 @@ func (mq *SimpleMessageQueueRepository) Pop(topic string) *[]byte {
 		data = mq.data[topic][0].Body
 		mq.Lock()
 		mq.data[topic] = mq.data[topic][1:]
+		if len(mq.data[topic]) == 0 {
+			delete(mq.data, topic)
+		}
 		mq.Unlock()
 		return &data
 	}
