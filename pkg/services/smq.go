@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -55,6 +56,7 @@ func (s SMQService) Start() {
 	r.HandleFunc("/pop/{topic}", s.popMessageHandler()).Methods("GET")
 	r.HandleFunc("/peek/{topic}", s.peekMessageHandler()).Methods("GET")
 	r.HandleFunc("/peekall/{topic}", s.peekAllMessageHandler()).Methods("GET")
+	r.HandleFunc("/topics", s.addMessageHandler()).Methods("GET")
 	r.HandleFunc("/clear/{topic}", s.clear()).Methods("DELETE")
 
 	log.Println(fmt.Sprintf("listening on port %s", port))
@@ -62,6 +64,26 @@ func (s SMQService) Start() {
 	err := http.ListenAndServe(fmt.Sprintf(":%s", port), r)
 	if err != nil {
 		panic(err)
+	}
+}
+
+func (s SMQService) getTopics() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		topics := s.messageQueue.GetTopics()
+		type topicsResults struct {
+			topics []string
+		}
+		var res topicsResults
+		res.topics = topics
+		bytes, err := json.Marshal(res)
+		if err != nil {
+			panic(err)
+		}
+		_, err = w.Write(bytes)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -78,6 +100,7 @@ func (s SMQService) addMessageHandler() http.HandlerFunc {
 
 func (s SMQService) popMessageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		topic := getTopic(w, r)
 		res := s.messageQueue.Pop(topic)
 		if res != nil {
@@ -97,6 +120,7 @@ func (s SMQService) popMessageHandler() http.HandlerFunc {
 
 func (s SMQService) peekMessageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		topic := getTopic(w, r)
 		res := s.messageQueue.Peek(topic)
 		if res != nil {
@@ -116,6 +140,7 @@ func (s SMQService) peekMessageHandler() http.HandlerFunc {
 
 func (s SMQService) peekAllMessageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		topic := getTopic(w, r)
 		res := s.messageQueue.PeekAll(topic)
 		if res != nil {
@@ -134,6 +159,7 @@ func (s SMQService) peekAllMessageHandler() http.HandlerFunc {
 
 func (s SMQService) clear() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		topic := getTopic(w, r)
 		s.messageQueue.Clear(topic)
 		_, err := w.Write(nil)

@@ -6,4 +6,5 @@ type IMessageQueueRepository interface {
 	PeekAll(string) *[]byte
 	Peek(string) *[]byte
 	Push(string, []byte)
+	GetTopics() []string
 }

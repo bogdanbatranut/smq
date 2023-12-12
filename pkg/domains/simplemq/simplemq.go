@@ -79,3 +79,11 @@ func (mq *SimpleMessageQueueRepository) Push(topic string, obj []byte) {
 	mq.data[topic] = append(mq.data[topic], entity.Response{Body: obj})
 	mq.Unlock()
 }
+
+func (mq *SimpleMessageQueueRepository) GetTopics() []string {
+	var topics []string
+	for key, _ := range mq.data {
+		topics = append(topics, key)
+	}
+	return topics
+}
