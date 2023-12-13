@@ -25,12 +25,10 @@ func (mq *SimpleMessageQueueRepository) Pop(topic string) *[]byte {
 			return nil
 		}
 		data = mq.data[topic][0].Body
-		mq.Lock()
 		mq.data[topic] = mq.data[topic][1:]
 		if len(mq.data[topic]) == 0 {
 			delete(mq.data, topic)
 		}
-		mq.Unlock()
 		return &data
 	}
 	mq.Mutex.Unlock()
@@ -56,11 +54,9 @@ func (mq *SimpleMessageQueueRepository) PeekAll(topic string) *[]byte {
 		if len(mq.data[topic]) == 0 {
 			return nil
 		}
-		mq.Lock()
 		for _, data := range mq.data[topic] {
 			res = append(res, data.Body...)
 		}
-		mq.Unlock()
 		return &res
 	}
 	mq.Unlock()
@@ -74,9 +70,7 @@ func (mq *SimpleMessageQueueRepository) Peek(topic string) *[]byte {
 		if len(mq.data[topic]) == 0 {
 			return nil
 		}
-		mq.Lock()
 		data = mq.data[topic][0].Body
-		mq.Unlock()
 		return &data
 	}
 	mq.Unlock()
