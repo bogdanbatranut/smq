@@ -48,7 +48,7 @@ func (mq *SimpleMessageQueueRepository) Clear(topic string) {
 
 func (mq *SimpleMessageQueueRepository) PeekAll(topic string) *[]byte {
 	var res []byte
-
+	// TODO
 	mq.Lock()
 	if mq.data[topic] != nil {
 		if len(mq.data[topic]) == 0 {
