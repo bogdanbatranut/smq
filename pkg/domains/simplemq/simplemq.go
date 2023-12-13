@@ -19,6 +19,7 @@ func NewSimpleMessageQueueRepository() *SimpleMessageQueueRepository {
 func (mq *SimpleMessageQueueRepository) Pop(topic string) *[]byte {
 	var data []byte
 
+	mq.Lock()
 	if mq.data[topic] != nil {
 		if len(mq.data[topic]) == 0 {
 			return nil
@@ -32,21 +33,25 @@ func (mq *SimpleMessageQueueRepository) Pop(topic string) *[]byte {
 		mq.Unlock()
 		return &data
 	}
-
+	mq.Mutex.Unlock()
 	return nil
+
 }
 
 func (mq *SimpleMessageQueueRepository) Clear(topic string) {
+	mq.Lock()
 	if mq.data[topic] != nil {
 		if len(mq.data[topic]) != 0 {
 			mq.data[topic] = nil
 		}
 	}
+	mq.Unlock()
 }
 
 func (mq *SimpleMessageQueueRepository) PeekAll(topic string) *[]byte {
 	var res []byte
 
+	mq.Lock()
 	if mq.data[topic] != nil {
 		if len(mq.data[topic]) == 0 {
 			return nil
@@ -58,12 +63,13 @@ func (mq *SimpleMessageQueueRepository) PeekAll(topic string) *[]byte {
 		mq.Unlock()
 		return &res
 	}
+	mq.Unlock()
 	return nil
 }
 
 func (mq *SimpleMessageQueueRepository) Peek(topic string) *[]byte {
 	var data []byte
-
+	mq.Lock()
 	if mq.data[topic] != nil {
 		if len(mq.data[topic]) == 0 {
 			return nil
@@ -73,7 +79,7 @@ func (mq *SimpleMessageQueueRepository) Peek(topic string) *[]byte {
 		mq.Unlock()
 		return &data
 	}
-
+	mq.Unlock()
 	return nil
 }
 
