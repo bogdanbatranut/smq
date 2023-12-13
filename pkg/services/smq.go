@@ -107,7 +107,7 @@ func (s SMQService) popMessageHandler() http.HandlerFunc {
 		topic := getTopic(w, r)
 		res := s.messageQueue.Pop(topic)
 		if res != nil {
-			log.Println("Pop Message ... ", string(*res))
+			//log.Println("Pop Message ... ", string(*res))
 			_, err := w.Write(*res)
 			if err != nil {
 				panic(err)
@@ -127,7 +127,7 @@ func (s SMQService) peekMessageHandler() http.HandlerFunc {
 		topic := getTopic(w, r)
 		res := s.messageQueue.Peek(topic)
 		if res != nil {
-			log.Println("Peek Message ... ", string(*res))
+			//log.Println("Peek Message ... ", string(*res))
 			_, err := w.Write(*res)
 			if err != nil {
 				panic(err)
