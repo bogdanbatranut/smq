@@ -92,6 +92,7 @@ func (s SMQService) getTopics() http.HandlerFunc {
 
 func (s SMQService) addMessageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Access-Control-Allow-Origin", "*")
 		topic := getTopic(w, r)
 		message, err := io.ReadAll(r.Body)
 		if err != nil {
